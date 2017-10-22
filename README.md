@@ -49,17 +49,14 @@ And simple domain model interaction in order to add / update entities
 ```
 using (var dc = new CassandraDataContext(new[] { "127.0.0.1" }, "mykeyspace"))
 {
-  using (var dc = new CassandraDataContext(new[] { "127.0.0.1" }, "mykeyspace"))
+  var userResult = new UserResult
   {
-    var userResult = new UserResult
-    {
-      result = 99.99F,
-      timestamp = DateTime.Now,
-      user_id = "user_1"
-    };
-
-    dc.AddOrUpdate(userResult)
-  }
+    result = 99.99F,
+    timestamp = DateTime.Now,
+    user_id = "user_1"
+  };
+  
+  dc.AddOrUpdate(userResult)
 }
 ```
 
