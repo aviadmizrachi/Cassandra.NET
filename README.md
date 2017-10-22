@@ -13,5 +13,8 @@ The main class is DataContext class.
 Initialize it with the contact points for the cluster and the keyspace name (optional)
 
 ```
-Give an example
+using (var dataContext = new CassandraDataContext(new[] {"127.0.0.1"}, "mykeyspace"))
+{
+}
+
 ```
