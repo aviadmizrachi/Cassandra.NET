@@ -7,7 +7,7 @@ Cassandra.NET is available in order to allow C# developers to work with classes 
 Getting started is rather easy :-).
 Just download the package from the nuget and you are good to go.
 
-### Getting started with some code
+### Coding it
 
 The main class is DataContext class.
 Initialize it with the contact points for the cluster and the keyspace name (optional)
@@ -18,3 +18,18 @@ using (var dataContext = new CassandraDataContext(new[] {"127.0.0.1"}, "mykeyspa
 }
 
 ```
+
+### Linking the entity model
+
+Linking the class from your domain model to the cassandra table is done using the CassandraTableAttribute
+
+```
+[CassandraTable(TableName = "user_results")]
+public class UserResult
+{
+  public string user_id { get; set; }
+  public DateTimeOffset timestamp { get; set; }
+  public float result { get; set; }
+}
+```
+
