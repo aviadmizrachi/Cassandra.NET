@@ -54,5 +54,17 @@ namespace Cassandra.NET
             return Select(predicate).FirstOrDefault();
         }
 
+        public void AddOrUpdate<T>(T entity)
+        {
+            var tableName = typeof(T).ExtractTableName<T>();
+            var properties = entity.GetType().GetProperties();
+            var properiesNames = properties.Select(p => p.Name).ToArray();
+            var parametersSignals = properties.Select(p => "?").ToArray();
+            var propertiesValues = properties.Select(p => p.GetValue(entity)).ToArray();
+            var insertCql = $"insert into {tableName}({string.Join(",", properiesNames)}) values ({string.Join(",", parametersSignals)})";
+            var insertStatment = new SimpleStatement(insertCql, propertiesValues);
+            session.Execute(insertStatment);
+        }
+
     }
 }
