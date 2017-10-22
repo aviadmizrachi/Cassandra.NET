@@ -1,4 +1,4 @@
-# Project Title
+# Cassandra.NET
 
 Cassandra.NET is available in order to allow C# developers to work with classes reflection when working with the Cassandra keyspace and tables.
 
@@ -33,3 +33,34 @@ public class UserResult
 }
 ```
 
+### Interacting with the cassandra data store
+
+Now on we can use simple LINQ in order to select and load items from the table
+
+```
+using (var dc = new CassandraDataContext(new[] { "127.0.0.1" }, "mykeyspace"))
+{
+  var topUsers = dc.Select<UserResult>(u => u.result >= 90);
+}
+```
+
+And simple domain model interaction in order to add / update entities
+
+```
+using (var dc = new CassandraDataContext(new[] { "127.0.0.1" }, "mykeyspace"))
+{
+  using (var dc = new CassandraDataContext(new[] { "127.0.0.1" }, "mykeyspace"))
+  {
+    var userResult = new UserResult
+    {
+      result = 99.99F,
+      timestamp = DateTime.Now,
+      user_id = "user_1"
+    };
+
+    dc.AddOrUpdate(userResult)
+  }
+}
+```
+
+### Good Luck!
