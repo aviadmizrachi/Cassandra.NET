@@ -1,0 +1,2 @@
+﻿CREATE KEYSPACE IF NOT EXISTS demo with replication = {'class':'SimpleStrategy', 'replication_factor':1};
+CREATE TABLE ID NOT EXISTS user_results(user_id text, time timestamp, result float, PRIMARY KEY(user_id, time));

@@ -78,7 +78,11 @@ namespace Cassandra.NET.Helpers
                         var memberExpression = (MemberExpression)exp;
                         if (memberExpression.Expression.NodeType == ExpressionType.Parameter)
                         {
-                            memberName = memberExpression.Member.Name;
+                            var property = memberExpression.Member as PropertyInfo;
+                            if (property != null)
+                                memberName = property.GetColumnNameMapping();
+                            else
+                                memberName = memberExpression.Member.Name;
                         }
                         else
                         {

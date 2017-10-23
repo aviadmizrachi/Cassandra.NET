@@ -7,16 +7,15 @@ namespace Cassandra.NET.Helpers
         public static T Map<T>(Row row)
         {
             var mapped = Activator.CreateInstance<T>();
-            var properties = mapped.GetType().GetProperties();
+            var properties = mapped.GetType().GetCassandraRelevantProperties();
             foreach (var property in properties)
             {
-                var value = row[property.Name];
+                var columnName = property.GetColumnNameMapping();
+                var value = row[columnName];
                 property.SetValue(mapped, value);
             }
 
             return mapped;
-
-
         }
     }
 }

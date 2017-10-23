@@ -2,7 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Aviad Mizrachi</Authors>
+    <Company />
+    <Description>Enables smooth POCO integration between Cassandra and C#
+Support for Select, Add, Update using c# reflection</Description>
+    <Copyright>Aviad Mizrachi</Copyright>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/aviadmizrachi/Cassandra.NET</PackageProjectUrl>
+    <RepositoryUrl></RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>Cassandra .NET C# DB NoSQL</PackageTags>
+    <PackageReleaseNotes>Support for insert, update, select from cassandra tables</PackageReleaseNotes>
+    <PackageIconUrl>https://upload.wikimedia.org/wikipedia/commons/1/1e/Apache-cassandra-icon.png</PackageIconUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Cassandra.NET.Tester\**" />
+    <EmbeddedResource Remove="Cassandra.NET.Tester\**" />
+    <None Remove="Cassandra.NET.Tester\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CassandraCSharpDriver" Version="3.3.2" />
