@@ -28,9 +28,9 @@ Linking the class from your domain model to the cassandra table is done using th
 [CassandraTable("user_results")]
 public class UserResultModel
 {
-  public string user_id { get; set; }
-  public DateTimeOffset time { get; set; }
-  public float result { get; set; }
+    public string user_id { get; set; }
+    public DateTimeOffset time { get; set; }
+    public float result { get; set; }
 }
 
 ```
@@ -42,7 +42,7 @@ Now we can use simple LINQ queries in order to select and load items from the ta
 ```
 using (dataContext = new CassandraDataContext(new[] { "127.0.0.1" }, "demo"))
 {
-  var topUsers = dataContext.Select<UserResult>(u => u.result >= 90);
+    var topUsers = dataContext.Select<UserResult>(u => u.result >= 90);
 }
 ```
 
@@ -51,14 +51,14 @@ And simple domain model interaction in order to add / update entities
 ```
 using (dataContext = new CassandraDataContext(new[] { "127.0.0.1" }, "demo"))
 {
-  var userResult = new UserResult
-  {
-    result = 99.99F,
-    timestamp = DateTime.Now,
-    user_id = "user_1"
-  };
+    var userResult = new UserResult
+    {
+        result = 99.99F,
+        timestamp = DateTime.Now,
+        user_id = "user_1"
+    };
   
-  dataContext.AddOrUpdate(userResult)
+    dataContext.AddOrUpdate(userResult)
 }
 ```
 
@@ -72,12 +72,12 @@ In order to map the property names to the matching column names in the cassandra
 [CassandraTable("user_results")]
 public class UserResultModelWithMapping
 {
-  [CassandraProperty("user_id")]
-  public string UserId { get; set; }
-  [CassandraProperty("time")]
-  public DateTimeOffset Timestamp { get; set; }
-  [CassandraProperty("result")]
-  public float Result { get; set; }
+    [CassandraProperty("user_id")]
+    public string UserId { get; set; }
+    [CassandraProperty("time")]
+    public DateTimeOffset Timestamp { get; set; }
+    [CassandraProperty("result")]
+    public float Result { get; set; }
 }
 
 ```
@@ -88,7 +88,7 @@ And the query will work now on the mapped properties.
 
 using (dataContext = new CassandraDataContext(new[] { "127.0.0.1" }, "demo"))
 {
-  var result = dataContext.SingleOrDefault<UserResultModelWithMapping>(u => u.UserId == "test_user_id" && u.Timestamp == timestamp);
+    var result = dataContext.SingleOrDefault<UserResultModelWithMapping>(u => u.UserId == "test_user_id" && u.Timestamp == timestamp);
 }
 
 ```
@@ -104,15 +104,15 @@ The data context will know to ignore these properties on add and map.
 [CassandraTable("user_results")]
 public class UserResultModelWithIgnoreProperty
 {
-  [CassandraProperty("user_id")]
-  public string UserId { get; set; }
-  [CassandraProperty("time")]
-  public DateTimeOffset Timestamp { get; set; }
-  [CassandraProperty("result")]
-  public float Result { get; set; }
+    [CassandraProperty("user_id")]
+    public string UserId { get; set; }
+    [CassandraProperty("time")]
+    public DateTimeOffset Timestamp { get; set; }
+    [CassandraProperty("result")]
+    public float Result { get; set; }
 
-  [CassandraIgnore]
-  public int ResultFactor { get; set; }
+    [CassandraIgnore]
+    public int ResultFactor { get; set; }
 }
 
 ```
