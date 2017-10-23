@@ -42,7 +42,7 @@ Now we can use simple LINQ queries in order to select and load items from the ta
 ```
 using (dataContext = new CassandraDataContext(new[] { "127.0.0.1" }, "demo"))
 {
-  var topUsers = dc.Select<UserResult>(u => u.result >= 90);
+  var topUsers = dataContext.Select<UserResult>(u => u.result >= 90);
 }
 ```
 
