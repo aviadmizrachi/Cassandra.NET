@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Aviad Mizrachi</Authors>
     <Company />
-    <Description>Enables smooth POCO integration between Cassandra and C#
+    <Description>Enables smooth ORM like integration between Cassandra and C#
 Support for Select, Add, Update using c# reflection</Description>
     <Copyright>Aviad Mizrachi</Copyright>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
@@ -13,8 +13,9 @@ Support for Select, Add, Update using c# reflection</Description>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>Cassandra .NET C# DB NoSQL</PackageTags>
-    <PackageReleaseNotes>Support for insert, update, select from cassandra tables</PackageReleaseNotes>
+    <PackageReleaseNotes>Support for ignore fields and mapping</PackageReleaseNotes>
     <PackageIconUrl>https://upload.wikimedia.org/wikipedia/commons/1/1e/Apache-cassandra-icon.png</PackageIconUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
