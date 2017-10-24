@@ -20,6 +20,12 @@ namespace Cassandra.NET.Helpers
             return null;
         }
 
+        public static string EvaluatePropertyName<T, TAverageModel>(Expression<Func<T, TAverageModel>> predicate)
+        {
+            var expression = predicate.Body as MemberExpression;
+            return ExtractMemberNameFromExpression(expression);
+        }
+
         private static object VisitMemberAccess(MemberExpression expression)
         {
             // there should only be two options. PropertyInfo or FieldInfo... let's extract the VALUE accordingly
@@ -78,11 +84,7 @@ namespace Cassandra.NET.Helpers
                         var memberExpression = (MemberExpression)exp;
                         if (memberExpression.Expression.NodeType == ExpressionType.Parameter)
                         {
-                            var property = memberExpression.Member as PropertyInfo;
-                            if (property != null)
-                                memberName = property.GetColumnNameMapping();
-                            else
-                                memberName = memberExpression.Member.Name;
+                            memberName = ExtractMemberNameFromExpression(memberExpression);
                         }
                         else
                         {
@@ -103,6 +105,19 @@ namespace Cassandra.NET.Helpers
             queryString = $"{memberName} {operand} ?";
 
             return new Query(queryString, new[] { value });
+        }
+
+        private static string ExtractMemberNameFromExpression(MemberExpression memberExpression)
+        {
+            string memberName;
+
+            var property = memberExpression.Member as PropertyInfo;
+            if (property != null)
+                memberName = property.GetColumnNameMapping();
+            else
+                memberName = memberExpression.Member.Name;
+
+            return memberName;
         }
 
         private static string GetOperand(ExpressionType nodeType)

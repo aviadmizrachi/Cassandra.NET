@@ -112,6 +112,9 @@ namespace Cassandra.NET.Tester
 
             dataContext.AddOrUpdate(userResult);
 
+            dataContext.Average<UserResultModelWithMapping, float>(u => u.UserId == "test_user_id", u => u.Result);
+            dataContext.Sum<UserResultModelWithMapping, float>(u => u.UserId == "test_user_id", u => u.Result);
+
             var savedResult = dataContext.SingleOrDefault<UserResultModelWithIgnoreProperty>(u => u.UserId == "test_user_id" && u.Timestamp == timestamp);
 
             Assert.IsNotNull(savedResult);

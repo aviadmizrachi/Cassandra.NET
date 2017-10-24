@@ -3,7 +3,6 @@ using System.Linq;
 using Cassandra.NET.Helpers;
 using System.Linq.Expressions;
 using System.Collections.Generic;
-using Cassandra.NET.Attributes;
 
 namespace Cassandra.NET
 {
@@ -45,6 +44,39 @@ namespace Cassandra.NET
             return output;
         }
 
+        public double Average<T, TAverageModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TAverageModel>> propertyExpression)
+        {
+            var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
+
+            var queryStatement = QueryBuilder.EvaluateQuery(predicate);
+            var tableName = typeof(T).ExtractTableName<T>();
+            var selectQuery = $"select avg({columnName}) from {tableName} where {queryStatement.Statment}";
+
+            var statement = new SimpleStatement(selectQuery, queryStatement.Values);
+            var rows = session.Execute(statement);
+
+            var avg = Convert.ToDouble(rows.First()[0]);
+
+            return avg;
+        }
+
+        public double Sum<T, TSumModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TSumModel>> propertyExpression)
+        {
+            var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
+
+            var queryStatement = QueryBuilder.EvaluateQuery(predicate);
+            var tableName = typeof(T).ExtractTableName<T>();
+            var selectQuery = $"select sum({columnName}) from {tableName} where {queryStatement.Statment}";
+
+            var statement = new SimpleStatement(selectQuery, queryStatement.Values);
+            var rows = session.Execute(statement);
+
+            var sum = Convert.ToDouble(rows.First()[0]);
+
+            return sum;
+        }
+
+
         public T SingleOrDefault<T>(Expression<Func<T, bool>> predicate)
         {
             return Select(predicate).SingleOrDefault();
@@ -68,6 +100,8 @@ namespace Cassandra.NET
             var insertStatment = new SimpleStatement(insertCql, propertiesValues);
             session.Execute(insertStatment);
         }
+
+        
 
     }
 }
