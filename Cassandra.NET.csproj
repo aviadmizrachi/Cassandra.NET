@@ -13,9 +13,9 @@ Support for Select, Add, Update using c# reflection</Description>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>Cassandra .NET C# DB NoSQL</PackageTags>
-    <PackageReleaseNotes>Support for ignore fields and mapping</PackageReleaseNotes>
+    <PackageReleaseNotes>Support for Average and Sum operations</PackageReleaseNotes>
     <PackageIconUrl>https://upload.wikimedia.org/wikipedia/commons/1/1e/Apache-cassandra-icon.png</PackageIconUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
