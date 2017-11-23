@@ -10,10 +10,22 @@ namespace Cassandra.NET.Tester
     {
         private CassandraDataContext dataContext;
 
+        static string query = "drop keyspace IF EXISTS demo;" + Environment.NewLine +
+                              "create keyspace demo with replication = {'class':'SimpleStrategy', 'replication_factor':1};" + Environment.NewLine +
+                              "CREATE TABLE IF NOT EXISTS demo.user_results(user_id text, time timestamp, result float, PRIMARY KEY(user_id, time));";
+
         [TestInitialize]
         public void TestInitialize()
         {
-            dataContext = new CassandraDataContext(new[] { "127.0.0.1" }, "demo");
+            var contactPoints = new[] { "127.0.0.1" };
+            var cluster = Cluster.Builder().AddContactPoints(contactPoints).Build();
+            var session = cluster.Connect();
+
+            var lines = query.Split(Environment.NewLine);
+            foreach (var line in lines)
+                session.Execute(line);
+
+            dataContext = new CassandraDataContext(contactPoints, "demo");
         }
 
         [TestCleanup]
@@ -112,7 +124,6 @@ namespace Cassandra.NET.Tester
 
             dataContext.AddOrUpdate(userResult);
 
-            dataContext.Average<UserResultModelWithMapping, float>(u => u.UserId == "test_user_id", u => u.Result);
             dataContext.Sum<UserResultModelWithMapping, float>(u => u.UserId == "test_user_id", u => u.Result);
 
             var savedResult = dataContext.SingleOrDefault<UserResultModelWithIgnoreProperty>(u => u.UserId == "test_user_id" && u.Timestamp == timestamp);
@@ -121,6 +132,37 @@ namespace Cassandra.NET.Tester
             Assert.AreEqual("test_user_id", savedResult.UserId);
             Assert.AreEqual(15.55F, savedResult.Result);
             Assert.AreEqual(default(int), savedResult.ResultFactor);
+        }
+
+        [TestMethod]
+        public void CalcAverageBasedOnTimeRange()
+        {
+            var from = DateTime.UtcNow.AddHours(-1);
+            var to = DateTime.UtcNow;
+
+            dataContext.Average<UserResultModelWithMapping, float>(u => u.UserId == "test_user_id" && u.Timestamp >= from && u.Timestamp <= to, u => u.Result);
+        }
+
+        [TestMethod]
+        public void CalcMax()
+        {
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now, 55.5F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(1), 88.8F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(2), 22.2F));
+
+            var max = dataContext.Max<UserResultModelWithMapping, float>(m => m.UserId == "user_1", m => m.Result);
+            Assert.AreEqual(88.8F, max);
+        }
+
+        [TestMethod]
+        public void CalcMin()
+        {
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now, 55.5F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(1), 88.8F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(2), 22.2F));
+
+            var max = dataContext.Min<UserResultModelWithMapping, float>(m => m.UserId == "user_1", m => m.Result);
+            Assert.AreEqual(22.2F, max);
         }
     }
 }

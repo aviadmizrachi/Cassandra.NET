@@ -44,7 +44,7 @@ namespace Cassandra.NET
             return output;
         }
 
-        public double Average<T, TAverageModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TAverageModel>> propertyExpression)
+        public double Average<T, TNumericModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TNumericModel>> propertyExpression)
         {
             var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
 
@@ -60,13 +60,45 @@ namespace Cassandra.NET
             return avg;
         }
 
-        public double Sum<T, TSumModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TSumModel>> propertyExpression)
+        public double Sum<T, TNumericModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TNumericModel>> propertyExpression)
         {
             var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
 
             var queryStatement = QueryBuilder.EvaluateQuery(predicate);
             var tableName = typeof(T).ExtractTableName<T>();
             var selectQuery = $"select sum({columnName}) from {tableName} where {queryStatement.Statment}";
+
+            var statement = new SimpleStatement(selectQuery, queryStatement.Values);
+            var rows = session.Execute(statement);
+
+            var sum = Convert.ToDouble(rows.First()[0]);
+
+            return sum;
+        }
+
+        public double Min<T, TNumericModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TNumericModel>> propertyExpression)
+        {
+            var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
+
+            var queryStatement = QueryBuilder.EvaluateQuery(predicate);
+            var tableName = typeof(T).ExtractTableName<T>();
+            var selectQuery = $"select min({columnName}) from {tableName} where {queryStatement.Statment}";
+
+            var statement = new SimpleStatement(selectQuery, queryStatement.Values);
+            var rows = session.Execute(statement);
+
+            var sum = Convert.ToDouble(rows.First()[0]);
+
+            return sum;
+        }
+
+        public double Max<T, TNumericModel>(Expression<Func<T, bool>> predicate, Expression<Func<T, TNumericModel>> propertyExpression)
+        {
+            var columnName = QueryBuilder.EvaluatePropertyName(propertyExpression);
+
+            var queryStatement = QueryBuilder.EvaluateQuery(predicate);
+            var tableName = typeof(T).ExtractTableName<T>();
+            var selectQuery = $"select max({columnName}) from {tableName} where {queryStatement.Statment}";
 
             var statement = new SimpleStatement(selectQuery, queryStatement.Values);
             var rows = session.Execute(statement);
