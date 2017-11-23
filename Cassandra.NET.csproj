@@ -6,16 +6,17 @@
     <Authors>Aviad Mizrachi</Authors>
     <Company />
     <Description>Enables smooth ORM like integration between Cassandra and C#
-Support for Select, Add, Update using c# reflection</Description>
+Support for Select, Add, Update using c# reflection
+In addition support for numeric calcualtions such as Min/Max/Average/Sum</Description>
     <Copyright>Aviad Mizrachi</Copyright>
     <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/aviadmizrachi/Cassandra.NET</PackageProjectUrl>
     <RepositoryUrl></RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>Cassandra .NET C# DB NoSQL</PackageTags>
-    <PackageReleaseNotes>Support for Average and Sum operations</PackageReleaseNotes>
+    <PackageReleaseNotes>Support for Min and Max</PackageReleaseNotes>
     <PackageIconUrl>https://upload.wikimedia.org/wikipedia/commons/1/1e/Apache-cassandra-icon.png</PackageIconUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
