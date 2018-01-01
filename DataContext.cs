@@ -143,6 +143,7 @@ namespace Cassandra.NET
                     {
                         session.Execute(currentBatch);
                         currentBatchSize = 0;
+                        currentBatch = new BatchStatement();
                     }
                 }
             }
