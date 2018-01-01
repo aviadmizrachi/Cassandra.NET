@@ -17,6 +17,7 @@ In addition support for numeric calcualtions such as Min/Max/Average/Sum</Descri
     <PackageReleaseNotes>Support for Min and Max</PackageReleaseNotes>
     <PackageIconUrl>https://upload.wikimedia.org/wikipedia/commons/1/1e/Apache-cassandra-icon.png</PackageIconUrl>
     <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,6 +10,10 @@ namespace Cassandra.NET
     {
         private Cluster cluster;
         private ISession session;
+        private BatchStatement currentBatch = new BatchStatement();
+        private int currentBatchSize = 0;
+        public int BatchSize { get; set; } = 50;
+        public bool UseBatching { get; set; } = false;
 
         public CassandraDataContext(string[] contactPoints)
         {
@@ -25,6 +29,12 @@ namespace Cassandra.NET
 
         public void Dispose()
         {
+            lock (currentBatch)
+            {
+                if (currentBatchSize > 0)
+                    session.Execute(currentBatch);
+            }
+
             session.Dispose();
         }
 
@@ -121,6 +131,29 @@ namespace Cassandra.NET
 
         public void AddOrUpdate<T>(T entity)
         {
+            var insertStatment = CreateAddStatement(entity);
+
+            if (UseBatching)
+            {
+                lock (currentBatch)
+                {
+                    currentBatch.Add(insertStatment);
+                    ++currentBatchSize;
+                    if ((currentBatchSize % BatchSize) == 0)
+                    {
+                        session.Execute(currentBatch);
+                        currentBatchSize = 0;
+                    }
+                }
+            }
+            else
+            {
+                session.Execute(insertStatment);
+            }
+        }
+
+        private Statement CreateAddStatement<T>(T entity)
+        {
             var tableName = typeof(T).ExtractTableName<T>();
 
             // We are interested only in the properties we are not ignoring
@@ -130,10 +163,8 @@ namespace Cassandra.NET
             var propertiesValues = properties.Select(p => p.GetValue(entity)).ToArray();
             var insertCql = $"insert into {tableName}({string.Join(",", properiesNames)}) values ({string.Join(",", parametersSignals)})";
             var insertStatment = new SimpleStatement(insertCql, propertiesValues);
-            session.Execute(insertStatment);
+
+            return insertStatment;
         }
-
-        
-
     }
 }

@@ -164,5 +164,18 @@ namespace Cassandra.NET.Tester
             var max = dataContext.Min<UserResultModelWithMapping, float>(m => m.UserId == "user_1", m => m.Result);
             Assert.AreEqual(22.2F, max);
         }
+
+        [TestMethod]
+        public void AddBatch()
+        {
+            dataContext.UseBatching = true;
+
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now, 55.5F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(1), 88.8F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(2), 22.2F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(3), 22.2F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(4), 22.2F));
+            dataContext.AddOrUpdate(new UserResultModelWithMapping("user_1", DateTime.Now.AddMinutes(5), 22.2F));
+        }
     }
 }
