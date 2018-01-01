@@ -10,8 +10,11 @@ namespace Cassandra.NET
     {
         private Cluster cluster;
         private ISession session;
-        private BatchStatement currentBatch = new BatchStatement();
+
         private int currentBatchSize = 0;
+        private object batchLock = new object();
+        private BatchStatement currentBatch = new BatchStatement();
+
         public int BatchSize { get; set; } = 50;
         public bool UseBatching { get; set; } = false;
 
@@ -135,7 +138,7 @@ namespace Cassandra.NET
 
             if (UseBatching)
             {
-                lock (currentBatch)
+                lock (batchLock)
                 {
                     currentBatch.Add(insertStatment);
                     ++currentBatchSize;
