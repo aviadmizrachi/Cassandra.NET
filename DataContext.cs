@@ -139,7 +139,7 @@ namespace Cassandra.NET
                 {
                     currentBatch.Add(insertStatment);
                     ++currentBatchSize;
-                    if ((currentBatchSize % BatchSize) == 0)
+                    if (currentBatchSize == BatchSize)
                     {
                         session.Execute(currentBatch);
                         currentBatchSize = 0;
